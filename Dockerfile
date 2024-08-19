@@ -1,21 +1,13 @@
-FROM alibaba-cloud-linux-3-registry.cn-hangzhou.cr.aliyuncs.com/alinux3/alinux3
+FROM registry.cn-hangzhou.aliyuncs.com/alinux/alinux3
 
-ARG DPDK_VERSION=21.11.3
+ARG REGION_ID=cn-hangzhou
 
-# dpdk dependency
-RUN yum groupinstall -y 'Development Tools' \
-    && yum install -y python3 python3-pip pciutils iproute \
-    && pip3 install meson ninja==1.8.2 pyelftools \
-    && yum clean all
+RUN yum install -y curl && \
+	repo_url=https://enclave-${REGION_ID}.oss-${REGION_ID}.aliyuncs.com/repo/alinux/enclave-expr.repo && \
+	yum install -y yum-utils && \
+	yum-config-manager --add-repo ${repo_url} && \
+	yum install -y libsgx-urts libsgx-uae-service # 按需添加更多SGX运行时依赖
 
-# dpdk build
-WORKDIR /dpdk_build
-RUN curl -OL http://fast.dpdk.org/rel/dpdk-${DPDK_VERSION}.tar.xz \
-    && tar -xvf dpdk-${DPDK_VERSION}.tar.xz \
-    && cd dpdk-stable-${DPDK_VERSION} \
-    && meson build \
-    && cd build \
-    && ninja \
-    && ninja install \
-    && cd ../../ \
-    && rm -rf dpdk-stable-${DPDK_VERSION} dpdk-${DPDK_VERSION}.tar.xz
+WORKDIR /src
+COPY src/hello_world src/enclave.signed.so /src
+ENTRYPOINT ["/src/hello_world"]
