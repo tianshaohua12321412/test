@@ -1,10 +1,11 @@
 # 使用基础镜像
-FROM tshtest-registry.cn-beijing.cr.aliyuncs.com/test/tesr11:v1
+FROM alibaba-cloud-linux-3-registry.cn-hangzhou.cr.aliyuncs.com/alinux3/python:3.11.1
 
-# 将自定义的 HTML 文件复制到 Nginx 的默认网页目录
-COPY index.html /usr/share/nginx/html/index.html
+# 将当前目录下的 app.py 文件复制到容器中
+COPY app.py /app/app.py
 
-# 曝露 Nginx 默认端口
-EXPOSE 80
-# 启动 Nginx 服务
-CMD ["nginx", "-g", "daemon off;"]
+# 设置工作目录
+WORKDIR /app
+
+# 运行 Python 应用
+CMD ["python", "app.py"]
