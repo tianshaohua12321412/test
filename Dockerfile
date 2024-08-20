@@ -1,5 +1,5 @@
 # 使用基础镜像
-FROM test-0722-registry-vpc.cn-hangzhou.cr.aliyuncs.com/test/test12:latest
+FROM tshtest-registry.cn-beijing.cr.aliyuncs.com/test/tesr11:v1
 
 # 将自定义的 HTML 文件复制到 Nginx 的默认网页目录
 COPY index.html /usr/share/nginx/html/index.html
