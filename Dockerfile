@@ -6,6 +6,5 @@ COPY index.html /usr/share/nginx/html/index.html
 
 # 曝露 Nginx 默认端口
 EXPOSE 80
-
 # 启动 Nginx 服务
 CMD ["nginx", "-g", "daemon off;"]
